@@ -5,3 +5,14 @@ Due: 3/12/25 11:59pm
 After reading the specs, start populating
 a list of things you think you might have to 
 do to finish this project.
+
+
+1) map reader
+2) tile object creator
+3) map class
+4) tile class
+5) text map check for errors
+6) queue route
+7) stack route
+8) optimal route
+9) run-times
