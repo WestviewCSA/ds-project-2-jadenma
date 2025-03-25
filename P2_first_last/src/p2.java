@@ -1,7 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Scanner;
 
 public class p2 {
@@ -39,26 +37,13 @@ public class p2 {
 	        scanner.close();
 
 	        // For debugging, print the map
-	        printMap(map);
 
 	    } catch (FileNotFoundException e) {
 	        e.printStackTrace();
 	    }
 	}
 	
-	public static void printMap(Tile[][] map) {
-	    for (int i = 0; i < map.length; i++) {
-	        for (int j = 0; j < map[i].length; j++) {
-	            System.out.print(map[i][j].type);
-	        }
-	        System.out.println();
-	    }
-	}
-
-	 
 	
-	
-
 	
 	
 }
