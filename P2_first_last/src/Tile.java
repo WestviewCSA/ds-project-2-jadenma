@@ -1,12 +1,13 @@
 
 public class Tile {
 
-	int row;
-    int col;
-    char type;  // 'W', '@', '.', '$', '|'
+	private int row;
+    private int col;
+    private char type;  // 'W', '@', '.', '$', '|'
     boolean visited;
 
     public Tile(int row, int col, char type) {
+	    super();
         this.row = row;
         this.col = col;
         this.type = type;
