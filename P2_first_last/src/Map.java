@@ -14,7 +14,7 @@ public class Map {
 			
 			for (int j = 0; j < column; j++) {
 				
-				map[i][j] = new Tile(i, j, '.'));
+				map[i][j] = new Tile(i, j, '.');
 				
 			}
 		}

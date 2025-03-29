@@ -1,4 +1,3 @@
-
 public class Tile {
 
 	private int row;
@@ -7,7 +6,7 @@ public class Tile {
     boolean visited;
 
     public Tile(int row, int col, char type) {
-	    super();
+	    
         this.row = row;
         this.col = col;
         this.type = type;

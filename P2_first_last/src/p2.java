@@ -17,9 +17,12 @@ public class p2 {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("Testing with map file: " + filename);
+		System.out.println("Testing with map file: ");
 		readMap("Design 5");
-		queueSolve();
+		queueSolution();
+		
+		optimalSolution();
+		
 	}
 	
 	public static void readMap(String filename) {
@@ -62,7 +65,7 @@ public class p2 {
 	    }
 	}
 	
-	public static void queueSolution {
+	public static void queueSolution() {
 
 		for (int i = 0; i < numRooms; i++) {
 
@@ -126,9 +129,13 @@ public class p2 {
 		
 	}
 
-	public static void stackSolve() {
+	public static void stackSolution() {
 
 		
+	}
+	
+	public static void optimalSolution() {
+		queueSolution();
 	}
 }
 
