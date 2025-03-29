@@ -170,6 +170,7 @@ public class p2 {
 	public static void stackSolution() {
 
 		
+		
 	}
 	
 	//optimal solution
