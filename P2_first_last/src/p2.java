@@ -7,6 +7,7 @@ import java.util.Stack;
 
 public class p2 {
 
+	//direction of travel for wolverine - N, S, E, W
 	static int[] colDir = {0, 1, 0, -1};
 	static int[] rowDir = {1, 0, -1, 0};
 	static Map[] grid;
@@ -18,22 +19,46 @@ public class p2 {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("Testing with map file: ");
-		readMap("Design 5");
-		queueSolution();
+		readMap("test8");
 		
+		//calculating runtimes
+		double initTime = System.currentTimeMillis();
+		queueSolution();
+		double finalTime = System.currentTimeMillis();
+		System.out.println("Queue Solution runTime: " + (finalTime-initTime)/100000);
+		initTime = System.currentTimeMillis();
+		stackSolution();
+		finalTime = System.currentTimeMillis();
+		System.out.println("Stack Solution runTime: " + (finalTime-initTime)/100000);
+		initTime = System.currentTimeMillis();
 		optimalSolution();
+		finalTime = System.currentTimeMillis();
+		System.out.println("Optimal Solution runTime: " + (finalTime-initTime)/100000);
+
+		//rest of test files
+		readMap("test1");
+		readMap("test2");
+		readMap("test3");
+		readMap("test4");
+		readMap("test5");
+		readMap("test6");
+		readMap("test7");
+		readMap("test9");
+		readMap("test10");
 		
 	}
 	
+	
+	//readMap method (did together in class)
 	public static void readMap(String filename) {
 	    
 	    try {
-	        scanner = new Scanner(file);
+	    	File file = new File(filename);
+	    	Scanner scanner = new Scanner(file);
+	        
 	        numRows = scanner.nextInt();
 	        numCols = scanner.nextInt();
 	        numRooms = scanner.nextInt();
-		    File file = new File(filename);
-	    Scanner scan = new Scanner(file);
 
 
 	        grid = new Map[numRooms];
@@ -41,22 +66,24 @@ public class p2 {
 	        int rowIndex = 0;
 	        for (int i = 0; i < numRooms; i++) {
 			
-			grid[i] = new Map(numRows, numCols);
-			
-			while (scanner.hasNextLine() && rowIndex < numRows) {
-				String row = scanner.nextLine();
-				//check if something is on the next line
-				if (row.length() > 0) {
-					for (int j = 0; j < numCols && j < row.length(); j++) {
-						char a = row.charAt(j);
-						Tile tile = new Tile(rowIndex, j, a);
-						grid[i].set(rowIndex, i, obj);
+				grid[i] = new Map(numRows, numCols);
+				
+				while (scanner.hasNextLine() && rowIndex < numRows) {
+					String row = scanner.nextLine();
+					//check if something is on the next line
+					if (row.length() > 0) {
+						for (int j = 0; j < numCols && j < row.length(); j++) {
+							char a = row.charAt(j);
+							Tile tile = new Tile(rowIndex, j, a);
+							grid[i].set(rowIndex, i, tile);
+						}
+						rowIndex++;
 					}
-					rowIndex++;
 				}
-			}
+			
+			scanner.close();
 		}
-	        scanner.close();
+	        
 
 	        // For debugging, print the map
 
@@ -65,76 +92,89 @@ public class p2 {
 	    }
 	}
 	
+	//Queue-based solution
 	public static void queueSolution() {
 
 		for (int i = 0; i < numRooms; i++) {
 
 			Queue<Tile> queue = new LinkedList<>();
 			boolean[][] visited = new boolean[numRows][numCols];
-			int distance[][] = new int[numRows][numCols];
+			
+			//keeps track of tiles visited and path of wolverine
+			Tile[][] path = new Tile[numRows][numCols];
 
 			for (int j = 0; j < numRows; j++) {
 				for (int k = 0; k < numCols; k++) {
-					distance[i][j] = -1;
-					if (grid[room].get(j, k).getType() == 'W') {
+					
+					
+					if (grid[i].get(j, k).getType() == 'W') {
+						//finds location of W and adds it to the queue
+						
 						queue.add(grid[i].get(j, k));
+						//marks the spot as visited
+						
 						visited[j][k] = true;
-						distance[j][k] = 0;
+						
+						path[j][k] = null;
 					}
 				}
 			}
 			while (!queue.isEmpty()) {
-	            		Tile current = queue.remove();
-	            		int curRow = current.getRow();
-	            		int curCol = current.getCol();
+				
+				Tile current = queue.remove();
+	       		int curRow = current.getRow();
+	            int curCol = current.getCol();
 
-	            		//check target reached
-	           		if (grid[i].get(curRow, curCol).getType() == '$' || grid[i].get(curRow, curCol).getType() == '|') {
+	            //check if you reached prize or next room
+	           	if (grid[i].get(curRow, curCol).getType() == '$' || grid[i].get(curRow, curCol).getType() == '|') {
 
-	                		LinkedList<Tile> path = new LinkedList<>();
-	                		Tile targetTile = current;
+                		LinkedList<Tile> pathway = new LinkedList<>();
+                		Tile targetTile = current;
 	                
-	                		while (targetTile != null) {
-	                    			path.addFirst(targetTile); //reverse list
-	                    			targetTile = parent[targetTile.getRow()][targetTile.getCol()];
-	                		}
+                		while (targetTile != null) {
+                    			pathway.addFirst(targetTile);
+                    			//add the tiles from tracked path to new pathway but reversed so when you get to the front it is null;
+                    			targetTile = path[targetTile.getRow()][targetTile.getCol()];
+                		}
 	                
-	                		//mark the path
-	                		for (Tile t : path) {
-	                    			if (t.getType() == '.') {
-	                        		t.setType('+'); 
-	                    		}
+                		//mark with + for path
+                		for (Tile t : pathway) {
+                   			if (t.getType() == '.') {
+                        		t.setType('+'); 
+                    		}
 	                	}
-	                
-	                	System.out.println("Path found:");
-	                	grid[i].print();  //Print the grid with the path marked
+                		//once pathway is found, print the path with the path marked
+                		System.out.println("Path found: ");
+                		grid[i].print();
 	                	return;
-	            	}
+	            }
 
-	            //4 directions
-	            for (int direction = 0; direction < 4; direction++) {
-	                int nextRow = curRow + colDir[direction];
-	                int nextCol = curCol + rowDir[direction];
+	            // add each available direction to queue so wolverine can check
+	            for (int l = 0; l < 4; l++) {
+	                int nextRow = curRow + colDir[l];
+	                int nextCol = curCol + rowDir[l];
 
 	                if (nextRow >= 0 && nextCol >= 0 && nextRow < numRows && nextCol < numCols && !visited[nextRow][nextCol] && grid[i].get(nextRow, nextCol).getType() != '@') {
 	                    visited[nextRow][nextCol] = true;
-	                    parent[nextRow][nextCol] = currentTile;  //set the parent
+	                    path[nextRow][nextCol] = current;  //set the parent
 	                    queue.add(grid[i].get(nextRow, nextCol));
 	                }
 	            }
 	        }
 		}
-		//if the target was not found
-	        System.out.println("Target not found.");
+		
 		
 	}
 
+	//stack-based solution
 	public static void stackSolution() {
 
 		
 	}
 	
+	//optimal solution
 	public static void optimalSolution() {
+		//queue is the optimal solution
 		queueSolution();
 	}
 }
